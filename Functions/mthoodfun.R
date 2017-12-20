@@ -1,8 +1,8 @@
 ### Mt Hood Snow Depth Plot
 #this function creates a plot of the snow depth at Meadows, Skibowl, and Timberline
-#inputs are start date and end date (%y-%m-%d)
+#inputs are start date and end date (%y-%m-%d), default set to present date and 15 days prior
 
-SnowDepthPlot <- function(startdate, enddate) {
+SnowDepthPlot <- function(startdate = (Sys.Date() - 15), enddate = Sys.Date()) {
 
 #https://www.nwac.us/data-portal/location/mt-hood/q?field_name=snow_depth&year=2017&custom_startdate=2017-12-17&custom_enddate=2017-12-19
 library(ggplot2)
@@ -31,4 +31,4 @@ return(g)
 
 }
 
-#plot <- SnowDepthPlot(startdate = '2017-12-01', enddate = '2017-12-20')
+#plot <- SnowDepthPlot(startdate = "2017-12-01", enddate = "2017-12-20")
