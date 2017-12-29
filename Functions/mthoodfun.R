@@ -5,8 +5,9 @@
 SnowDepthPlot <- function(startdate = (Sys.Date() - 15), enddate = Sys.Date()) {
 
 #https://www.nwac.us/data-portal/location/mt-hood/q?field_name=snow_depth&year=2017&custom_startdate=2017-12-17&custom_enddate=2017-12-19
-library(ggplot2)
-library(data.table)
+require(ggplot2)
+require(data.table)
+require(curl)
 
 url <- paste0('https://www.nwac.us/data-portal/csv/location/mt-hood/sensortype/snow_depth/start-date/', startdate, '/', 'end-date/', enddate, '/')  
 mthood <- fread(url)
@@ -31,4 +32,46 @@ return(g)
 
 }
 
-#plot <- SnowDepthPlot(startdate = "2017-12-01", enddate = "2017-12-20")
+#plot <- SnowDepthPlot()
+
+snowfall <- function(startdate = (Sys.Date() - 5), enddate = Sys.Date()) {
+  url <- paste0('https://www.nwac.us/data-portal/csv/location/mt-hood/sensortype/snowfall_24_hour/start-date/', startdate, '/', 'end-date/', enddate, '/')  
+  mthood <- fread(url)
+  
+  names(mthood) <- c('DateTimePST', 'MeadowsBase', 'TimberlineLodge')
+  mthood$DateTimePST <- as.POSIXct(mthood$DateTimePST)
+  #mthood <- na.omit(mthood)
+  
+  mthood <- melt(mthood, id.vars = c('DateTimePST'))
+  names(mthood) <- c('DateTimePST', 'Location', '24HourSnowFall_inches')
+  y.lim <- c(0, max(mthood$`24HourSnowFall_inches`))
+  
+  g <- ggplot(mthood) +
+    geom_line(aes(DateTimePST, `24HourSnowFall_inches`, color = Location)) +
+    ylim(y.lim)
+  g
+  
+}
+
+#snowfall()
+
+Precip <- function(startdate = (Sys.Date() - 5), enddate = Sys.Date()) {
+  url <- paste0('https://www.nwac.us/data-portal/csv/location/mt-hood/sensortype/precipitation/start-date/', startdate, '/', 'end-date/', enddate, '/')  
+  mthood <- fread(url)
+  
+  names(mthood) <- c('DateTimePST','SkiBowl', 'MeadowsBase', 'TimberlineLodge')
+  mthood$DateTimePST <- as.POSIXct(mthood$DateTimePST)
+  #mthood <- na.omit(mthood)
+  
+  mthood <- melt(mthood, id.vars = c('DateTimePST'))
+  names(mthood) <- c('DateTimePST', 'Location', 'Precip')
+  y.lim <- c(0, max(mthood$Precip))
+  
+  g <- ggplot(mthood) +
+    geom_line(aes(DateTimePST, Precip, color = Location)) +
+    ylim(y.lim)
+  g
+  
+}
+
+#Precip()
