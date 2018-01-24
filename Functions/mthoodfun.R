@@ -1,4 +1,34 @@
 ### Mt Hood Snow Plots
+library(devtools)
+#install_github("Gibbsdavidl/CatterPlots")
+# library(CatterPlots)
+# # x <- -10:10
+# # y <- -x^2 + 10
+# mthood_df <- mthood[mthood$`24HourSnowFall_inches` >0 & mthood$Location == "MeadowsBase",]
+# mthood_df$DateTimePST <- as.numeric(as.Date(mthood_df$DateTimePST))
+# mthood_df$Location <- as.character(mthood_df$Location)
+# 
+# purr <- catplot(xs=mthood_df$DateTimePST, ys=mthood_df$`24HourSnowFall_inches`, cat=3, catcolor='#000000FF', canvas = c(17553, 17555, 0, 11.5))
+# cats(purr, -x, -y, cat=4, catcolor='#FF0000')
+# 
+# # for more fun ...
+# meow <- multicat(xs=x, ys=y, cat=c(1,2,3), catcolor=list('#33FCFF','#FF0000'), canvas=c(-0.1,1.1, -0.1, 1.1))
+# morecats(meow, x, 10*sin(x)+40, size=0.05, cat=c(4,5,6), catcolor=list('#0495EE','#EE7504'), type="line")
+# 
+# # random cats
+# meow <- multicat(xs=x, ys=rnorm(21),
+#                  cat=c(1,2,3,4,5,6,7,8,9,10),
+#                  catcolor=list('#33FCFF'),
+#                  canvas=c(-0.1,1.1, -0.1, 1.1),
+#                  xlab="some cats", ylab="other cats", main="Random Cats")
+
+# devtools::install_github("GuangchuangYu/emojifont")
+# library(emojifont)
+# list.emojifonts()
+# load.emojifont('OpenSansEmoji.ttf')
+# 
+# http://guangchuangyu.github.io/2015/12/use-emoji-font-in-r/
+
 
 SnowDepthPlot <- function(startdate = (Sys.Date() - 2), enddate = Sys.Date()) {
   #this function creates a plot of the snow depth at Meadows, Skibowl, and Timberline
@@ -48,7 +78,13 @@ snowfall <- function(startdate = (Sys.Date() - 2), enddate = Sys.Date()) {
   
   g <- ggplot(mthood) +
     geom_point(aes(DateTimePST, `24HourSnowFall_inches`, color = Location)) +
-    ylim(y.lim)
+    #geom_text(family="OpenSansEmoji", size=5) +
+    ylim(y.lim) +
+    ylab('24-hour Snowfall (inches)') +
+    xlab('Date/Time (PST)') +
+    theme_bw()+
+    theme(legend.position = "top", legend.direction = "horizontal") +
+    labs(colour = "") 
   g
   
 }
