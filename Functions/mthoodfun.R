@@ -29,6 +29,16 @@ library(devtools)
 # 
 # http://guangchuangyu.github.io/2015/12/use-emoji-font-in-r/
 
+##NRCS
+#install.packages('RNRCS')
+#install.packages("metScanR")
+library(metScanR)
+#https://rhlee12.github.io/RNRCS/
+library(RNRCS)
+
+metScanR_DB()
+grabNRCS.data(network = "SNTL", DayBgn = (Sys.Date() - 2), DayEnd =  Sys.Date(), timescale = "hourly")
+
 
 SnowDepthPlot <- function(startdate = (Sys.Date() - 2), enddate = Sys.Date()) {
   #this function creates a plot of the snow depth at Meadows, Skibowl, and Timberline
