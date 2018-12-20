@@ -40,7 +40,7 @@ metScanR_DB()
 grabNRCS.data(network = "SNTL", DayBgn = (Sys.Date() - 2), DayEnd =  Sys.Date(), timescale = "hourly")
 
 
-SnowDepthPlot <- function(startdate = (Sys.Date() - 2), enddate = Sys.Date()) {
+SnowDepthPlot <- function(startdate = (Sys.Date() - 8), enddate = Sys.Date()) {
   #this function creates a plot of the snow depth at Meadows, Skibowl, and Timberline
   #inputs are start date and end date (%y-%m-%d), default set to present date and 15 days prior
   
@@ -48,6 +48,10 @@ SnowDepthPlot <- function(startdate = (Sys.Date() - 2), enddate = Sys.Date()) {
   require(ggplot2)
   require(data.table)
   require(curl)
+  
+  library(cowplot)
+  library(magick)
+  
   
   url <- paste0('https://www.nwac.us/data-portal/csv/location/mt-hood/sensortype/snow_depth/start-date/', startdate, '/', 'end-date/', enddate, '/')  
   mthood <- fread(url)
@@ -63,12 +67,18 @@ SnowDepthPlot <- function(startdate = (Sys.Date() - 2), enddate = Sys.Date()) {
     geom_line(aes(x = DateTimePST, y = MtHoodMeadows, color = 'Meadows Base(5380 feet)')) +
     geom_line(aes(x = DateTimePST, y = TimberlineLodge, color = 'Timberline Lodge (5880 feet)')) +
     ylab('Snow Depth (inches)') +
+    ylim(0, 50) +
     xlab('Date/Time (PST)') + 
-    theme_bw()+
+    #theme_bw()+
     theme(legend.position = "top", legend.direction = "horizontal") +
     labs(colour = "") 
   
-  return(g)
+  # Example with PNG (for fun, the OP's avatar - I love the raccoon)
+  newG <- ggdraw() +
+    draw_image("https://i.stack.imgur.com/WDOo4.jpg?s=328&g=1") +
+    draw_plot(g)  
+
+  return(newG)
   
 }
 
@@ -121,3 +131,17 @@ Precip <- function(startdate = (Sys.Date() - 3), enddate = Sys.Date()) {
 }
 
 Precip()
+
+# library(cowplot)
+# library(magick)
+# 
+# my_plot <- 
+#   ggplot(data    = iris, 
+#          mapping = aes(x    = Sepal.Length, 
+#                        fill = Species)) + 
+#   geom_density(alpha = 0.7)
+# 
+# # Example with PNG (for fun, the OP's avatar - I love the raccoon)
+# ggdraw() +
+#   draw_image("https://i.stack.imgur.com/WDOo4.jpg?s=328&g=1") +
+#   draw_plot(my_plot)
